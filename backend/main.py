@@ -49,8 +49,11 @@ app.add_middleware(
         "http://127.0.0.1:5500",
         "http://localhost:8080",
         "http://127.0.0.1:8080",
-        # Add your production domain here when deploying
-        # "https://your-app.azurestaticapps.net"
+        # Azure production domains
+        "https://nitisatya-affwa8f5brapasf9.centralindia-01.azurewebsites.net",
+        "https://nitisatya-affwa8f5brapasf9.scm.centralindia-01.azurewebsites.net",
+        # Allow all for demo (can restrict later)
+        "*"
     ],
     allow_credentials=True,
     allow_methods=["*"],
