@@ -1,0 +1,408 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Niti Satya AI - Government Updates Simplified</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div id="app">
+    <!-- Floating Navigation -->
+    <nav class="floating-nav">
+      <div class="nav-container container">
+        <div class="nav-logo">
+          <img src="assets/logos/emblem_gold.png" alt="Emblem" class="govt-emblem">
+          <span>Niti Satya AI</span>
+        </div>
+        <button class="menu-toggle" id="menu-toggle" aria-label="Toggle Menu">
+          <span class="menu-text">Menu</span>
+          <span class="menu-icon">
+            <span class="bar"></span>
+            <span class="bar"></span>
+          </span>
+        </button>
+      </div>
+    </nav>
+
+    <!-- Fullscreen Menu Overlay -->
+    <div class="fullscreen-menu" id="fullscreen-menu">
+      <div class="menu-content container">
+        <ul class="menu-items">
+          <li><a href="#latest-updates">Latest Updates</a></li>
+          <li><a href="#documents-section">Bills & Policies</a></li>
+          <li><a href="#sources-strip">Notifications</a></li>
+          <li><a href="#sources-strip">Sources</a></li>
+          <li><a href="#about-section">About</a></li>
+          <li><a href="#disclaimer">Disclaimer</a></li>
+        </ul>
+        <div class="menu-footer">
+          <div class="tricolor-divider">
+            <span class="saffron"></span>
+            <span class="white"></span>
+            <span class="green"></span>
+          </div>
+          <p>Official Information Bureau &bull; News Only</p>
+        </div>
+      </div>
+    </div>
+
+    <main>
+      <section class="hero-simple container">
+        <div class="accent-decor">
+          <div class="accent-line-saffron"></div>
+          <div class="accent-line-green"></div>
+        </div>
+        <div class="hero-text-content">
+          <h1 class="hero-title">Niti Satya AI</h1>
+          <p class="hero-subtitle">Government updates, explained clearly with AI.</p>
+
+          <!-- India-themed decorative elements -->
+          <div class="india-decor">
+            <div class="tricolor-accent">
+              <span class="saffron-bar"></span>
+              <span class="white-bar"></span>
+              <span class="green-bar"></span>
+            </div>
+            <div class="ashoka-wheel">
+              <svg viewBox="0 0 100 100" class="wheel-svg">
+                <circle cx="50" cy="50" r="45" stroke="#000080" stroke-width="2" fill="none" />
+                <circle cx="50" cy="50" r="8" fill="#000080" />
+                <!-- 24 spokes -->
+                <g stroke="#000080" stroke-width="1.5">
+                  <line x1="50" y1="5" x2="50" y2="42" />
+                  <line x1="50" y1="58" x2="50" y2="95" />
+                  <line x1="5" y1="50" x2="42" y2="50" />
+                  <line x1="58" y1="50" x2="95" y2="50" />
+                  <line x1="18" y1="18" x2="40" y2="40" />
+                  <line x1="60" y1="60" x2="82" y2="82" />
+                  <line x1="82" y1="18" x2="60" y2="40" />
+                  <line x1="40" y1="60" x2="18" y2="82" />
+                  <line x1="50" y1="5" x2="50" y2="42" transform="rotate(15 50 50)" />
+                  <line x1="50" y1="5" x2="50" y2="42" transform="rotate(30 50 50)" />
+                  <line x1="50" y1="5" x2="50" y2="42" transform="rotate(60 50 50)" />
+                  <line x1="50" y1="5" x2="50" y2="42" transform="rotate(75 50 50)" />
+                  <line x1="50" y1="5" x2="50" y2="42" transform="rotate(105 50 50)" />
+                  <line x1="50" y1="5" x2="50" y2="42" transform="rotate(120 50 50)" />
+                  <line x1="50" y1="5" x2="50" y2="42" transform="rotate(150 50 50)" />
+                  <line x1="50" y1="5" x2="50" y2="42" transform="rotate(165 50 50)" />
+                  <line x1="50" y1="5" x2="50" y2="42" transform="rotate(195 50 50)" />
+                  <line x1="50" y1="5" x2="50" y2="42" transform="rotate(210 50 50)" />
+                  <line x1="50" y1="5" x2="50" y2="42" transform="rotate(240 50 50)" />
+                  <line x1="50" y1="5" x2="50" y2="42" transform="rotate(255 50 50)" />
+                  <line x1="50" y1="5" x2="50" y2="42" transform="rotate(285 50 50)" />
+                  <line x1="50" y1="5" x2="50" y2="42" transform="rotate(300 50 50)" />
+                  <line x1="50" y1="5" x2="50" y2="42" transform="rotate(330 50 50)" />
+                  <line x1="50" y1="5" x2="50" y2="42" transform="rotate(345 50 50)" />
+                </g>
+              </svg>
+            </div>
+          </div>
+
+          <!-- Quick stats -->
+          <div class="hero-stats">
+            <div class="stat-item">
+              <span class="stat-number">5+</span>
+              <span class="stat-label">Bills Tracked</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-number">10+</span>
+              <span class="stat-label">Ministries</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-number">AI</span>
+              <span class="stat-label">Powered</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Official Information Sources Strip -->
+      <section class="sources-section" id="sources-strip">
+        <h3 class="sources-title">Official Information Sources</h3>
+
+        <div class="marquee-wrapper">
+          <div class="marquee-content">
+            <!-- Group 1 -->
+            <div class="source-group">
+              <div class="source-item">
+                <i class="ph ph-seal-check source-icon"></i>
+                <span class="source-name">Govt. of India</span>
+              </div>
+              <div class="source-item">
+                <i class="ph ph-currency-inr source-icon"></i>
+                <span class="source-name">Ministry of Finance</span>
+              </div>
+              <div class="source-item">
+                <i class="ph ph-graduation-cap source-icon"></i>
+                <span class="source-name">Ministry of Education</span>
+              </div>
+              <div class="source-item">
+                <i class="ph ph-heartbeat source-icon"></i>
+                <span class="source-name">Health & Family Welfare</span>
+              </div>
+              <div class="source-item">
+                <i class="ph ph-shield source-icon"></i>
+                <span class="source-name">Home Affairs</span>
+              </div>
+              <div class="source-item">
+                <i class="ph ph-bank source-icon"></i>
+                <span class="source-name">Reserve Bank of India</span>
+              </div>
+              <div class="source-item">
+                <img src="assets/logos/sebi_logo.png" alt="SEBI"
+                  style="height: 32px; filter: grayscale(100%); opacity: 0.8;">
+              </div>
+              <div class="source-item">
+                <i class="ph ph-fingerprint source-icon"></i>
+                <span class="source-name">UIDAI</span>
+              </div>
+            </div>
+            <!-- Group 2 (Duplicate for infinite loop) -->
+            <div class="source-group">
+              <div class="source-item">
+                <i class="ph ph-seal-check source-icon"></i>
+                <span class="source-name">Govt. of India</span>
+              </div>
+              <div class="source-item">
+                <i class="ph ph-currency-inr source-icon"></i>
+                <span class="source-name">Ministry of Finance</span>
+              </div>
+              <div class="source-item">
+                <i class="ph ph-graduation-cap source-icon"></i>
+                <span class="source-name">Ministry of Education</span>
+              </div>
+              <div class="source-item">
+                <i class="ph ph-heartbeat source-icon"></i>
+                <span class="source-name">Health & Family Welfare</span>
+              </div>
+              <div class="source-item">
+                <i class="ph ph-shield source-icon"></i>
+                <span class="source-name">Home Affairs</span>
+              </div>
+              <div class="source-item">
+                <i class="ph ph-bank source-icon"></i>
+                <span class="source-name">Reserve Bank of India</span>
+              </div>
+              <div class="source-item">
+                <img src="assets/logos/sebi_logo.png" alt="SEBI"
+                  style="height: 32px; filter: grayscale(100%); opacity: 0.8;">
+              </div>
+              <div class="source-item">
+                <i class="ph ph-fingerprint source-icon"></i>
+                <span class="source-name">UIDAI</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <p class="sources-disclaimer">
+          Logos represent publicly available official information sources. This platform is not affiliated with or
+          endorsed by any government entity.
+        </p>
+      </section>
+      <div class="ticker container">
+        <span class="ticker-label">Updates</span>
+        <div class="ticker-text">
+          <p>Applications open for National Scholarship 2024 • PM to visit Science Summit tomorrow • New tax filing
+            guidelines released</p>
+        </div>
+      </div>
+      </section>
+
+      <!-- News Feed Grid (Database Ready Structure) -->
+      <section class="news-feed container" id="latest-updates">
+        <h3 class="section-label">Latest Updates</h3>
+
+        <!-- Category Filter Tabs -->
+        <div class="category-filters" id="category-filters">
+          <button class="category-tab active" data-category="all" onclick="filterByCategory('all')">
+            <i class="ph ph-stack"></i> All
+          </button>
+          <button class="category-tab" data-category="finance" onclick="filterByCategory('finance')">
+            <i class="ph ph-bank"></i> Finance
+          </button>
+          <button class="category-tab" data-category="education" onclick="filterByCategory('education')">
+            <i class="ph ph-graduation-cap"></i> Education
+          </button>
+          <button class="category-tab" data-category="law" onclick="filterByCategory('law')">
+            <i class="ph ph-scales"></i> Law & Justice
+          </button>
+          <button class="category-tab" data-category="external" onclick="filterByCategory('external')">
+            <i class="ph ph-globe"></i> External Affairs
+          </button>
+          <button class="category-tab" data-category="court" onclick="filterByCategory('court')">
+            <i class="ph ph-gavel"></i> Supreme Court
+          </button>
+          <button class="category-tab" data-category="agriculture" onclick="filterByCategory('agriculture')">
+            <i class="ph ph-plant"></i> Agriculture
+          </button>
+        </div>
+
+        <div class="news-grid" id="news-feed-container">
+
+          <!-- Income Tax Bill 2025 -->
+          <a href="article.html?id=income-tax-2025" class="news-card-vertical" data-category="finance">
+            <div class="card-image-wrapper">
+              <div class="img-placeholder gradient-1"></div>
+              <span class="card-badge">📋 622 pages</span>
+            </div>
+            <div class="card-meta">
+              <span class="category-tag">Bill</span>
+              <span class="date">13 Feb 2025</span>
+            </div>
+            <h3 class="card-headline">The Income-tax Bill, 2025</h3>
+            <p class="card-excerpt">Replaces the 63-year-old Income-tax Act with simpler 536 sections...</p>
+          </a>
+
+          <!-- Select Committee Report -->
+          <a href="article.html?id=income-tax-select-committee" class="news-card-vertical" data-category="finance">
+            <div class="card-image-wrapper">
+              <div class="img-placeholder gradient-2"></div>
+              <span class="card-badge">📊 1200 pages</span>
+            </div>
+            <div class="card-meta">
+              <span class="category-tag">Report</span>
+              <span class="date">1 Mar 2025</span>
+            </div>
+            <h3 class="card-headline">Select Committee Report - Income Tax Bill</h3>
+            <p class="card-excerpt">Detailed review and recommendations from the Select Committee...</p>
+          </a>
+
+          <!-- Viksit Bharat Shiksha Adhishthan Bill -->
+          <a href="article.html?id=shiksha-bill-2025" class="news-card-vertical" data-category="education">
+            <div class="card-image-wrapper">
+              <div class="img-placeholder gradient-3"></div>
+              <span class="card-badge">📑 45 pages</span>
+            </div>
+            <div class="card-meta">
+              <span class="category-tag">Bill</span>
+              <span class="date">10 Jan 2025</span>
+            </div>
+            <h3 class="card-headline">Viksit Bharat Shiksha Adhishthan Bill, 2025</h3>
+            <p class="card-excerpt">Creates unified higher education regulator merging UGC, AICTE, NCTE...</p>
+          </a>
+
+          <!-- Securities Markets Code 2025 -->
+          <a href="article.html?id=securities-code-2025" class="news-card-vertical" data-category="finance">
+            <div class="card-image-wrapper">
+              <div class="img-placeholder gradient-4"></div>
+              <span class="card-badge">📋 180 pages</span>
+            </div>
+            <div class="card-meta">
+              <span class="category-tag">Bill</span>
+              <span class="date">15 Jan 2025</span>
+            </div>
+            <h3 class="card-headline">Securities Markets Code, 2025</h3>
+            <p class="card-excerpt">Consolidates SEBI Act, Securities Contracts Act into unified code...</p>
+          </a>
+
+          <!-- VB-G RAM G Bill -->
+          <a href="article.html?id=vb-gramg-bill-2025" class="news-card-vertical" data-category="agriculture">
+            <div class="card-image-wrapper">
+              <div class="img-placeholder gradient-1"></div>
+              <span class="card-badge">📑 65 pages</span>
+            </div>
+            <div class="card-meta">
+              <span class="category-tag">Bill - Passed</span>
+              <span class="date">20 Jan 2025</span>
+            </div>
+            <h3 class="card-headline">VB–G RAM G Bill, 2025</h3>
+            <p class="card-excerpt">Rural employment guarantee with skill development integration...</p>
+          </a>
+
+          <!-- Electricity Amendment Bill -->
+          <a href="article.html?id=electricity-bill-2025" class="news-card-vertical" data-category="law">
+            <div class="card-image-wrapper">
+              <div class="img-placeholder gradient-2"></div>
+              <span class="card-badge">📋 35 pages</span>
+            </div>
+            <div class="card-meta">
+              <span class="category-tag">Bill - Draft</span>
+              <span class="date">25 Jan 2025</span>
+            </div>
+            <h3 class="card-headline">Electricity (Amendment) Bill, 2025</h3>
+            <p class="card-excerpt">Promotes renewable energy and improves distribution networks...</p>
+          </a>
+
+          <!-- Viksit Bharat Main -->
+          <a href="article.html?id=vikasit-bharat-main" class="news-card-vertical" data-category="law">
+            <div class="card-image-wrapper">
+              <div class="img-placeholder gradient-3"></div>
+              <span class="card-badge">📊 520 pages</span>
+            </div>
+            <div class="card-meta">
+              <span class="category-tag">Bill</span>
+              <span class="date">8 Jan 2025</span>
+            </div>
+            <h3 class="card-headline">Viksit Bharat Bill - Main Document</h3>
+            <p class="card-excerpt">India's Vision 2047 development roadmap and sectoral priorities...</p>
+          </a>
+
+        </div>
+
+        <!-- Loading Indicator for Infinite Scroll feel -->
+        <div class="loading-trigger">
+          <div class="loading-dots">
+            <span></span><span></span><span></span>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="govt-footer">
+      <div class="footer-container container">
+        <div class="footer-grid">
+          <!-- Left Section: About -->
+          <div class="footer-about" id="about-section">
+            <h4 class="footer-heading">About Niti Satya AI</h4>
+            <p class="footer-text">
+              Niti Satya AI uses advanced artificial intelligence to explain Indian government bills,
+              policies, and notifications in simple language. Our AI-powered platform helps citizens
+              understand complex legal documents quickly and accurately.
+            </p>
+            <p class="footer-text developer-credit">
+              <strong>Developed by Yuvraj Sharma and Tushar Jain</strong>
+            </p>
+            <button class="footer-btn-outline">Learn how it works</button>
+          </div>
+
+          <!-- Right Section: Social -->
+          <div class="footer-social">
+            <h4 class="footer-heading">Follow Updates</h4>
+            <div class="social-icons">
+              <a href="#" class="social-icon" aria-label="X (Twitter)"><i class="ph ph-x-logo"></i></a>
+              <a href="#" class="social-icon" aria-label="Facebook"><i class="ph ph-facebook-logo"></i></a>
+              <a href="#" class="social-icon" aria-label="LinkedIn"><i class="ph ph-linkedin-logo"></i></a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Bottom Strip -->
+      <div class="footer-bottom-strip" id="disclaimer">
+        <div class="bottom-container container">
+          <div class="footer-links">
+            <a href="#">Home</a>
+            <a href="#sources-strip">Sources</a>
+            <a href="#disclaimer">Disclaimer</a>
+            <a href="#">Accessibility</a>
+            <a href="#about-section">Contact</a>
+          </div>
+          <p class="source-note">Information sourced from official Indian government portals. AI-generated summaries for
+            educational purposes only.</p>
+        </div>
+      </div>
+    </footer>
+  </div>
+  <script src="main.js"></script>
+</body>
+
+</html>

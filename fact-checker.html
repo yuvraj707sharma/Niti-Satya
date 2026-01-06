@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Fact Checker - Government Truth Portal</title>
+    <meta name="description" content="Verify claims about government policies against official documents">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div id="app">
+        <!-- Floating Navigation -->
+        <nav class="floating-nav">
+            <div class="nav-container container">
+                <div class="nav-logo">
+                    <img src="assets/logos/emblem_gold.png" alt="Emblem" class="govt-emblem">
+                    <span>Govt. Truth Portal</span>
+                </div>
+                <button class="menu-toggle" id="menu-toggle" aria-label="Toggle Menu">
+                    <span class="menu-text">Menu</span>
+                    <span class="menu-icon">
+                        <span class="bar"></span>
+                        <span class="bar"></span>
+                    </span>
+                </button>
+            </div>
+        </nav>
+
+        <!-- Fullscreen Menu Overlay -->
+        <div class="fullscreen-menu" id="fullscreen-menu">
+            <div class="menu-content container">
+                <ul class="menu-items">
+                    <li><a href="index.html">Latest Updates</a></li>
+                    <li><a href="index.html#bills">Bills & Policies</a></li>
+                    <li><a href="fact-checker.html" class="active">Fact Checker</a></li>
+                    <li><a href="#">Sources</a></li>
+                    <li><a href="#">About</a></li>
+                </ul>
+                <div class="menu-footer">
+                    <div class="tricolor-divider">
+                        <span class="saffron"></span>
+                        <span class="white"></span>
+                        <span class="green"></span>
+                    </div>
+                    <p>Unbiased • Document-Backed • Transparent</p>
+                </div>
+            </div>
+        </div>
+
+        <main class="fact-checker-page container">
+            <!-- Hero Section -->
+            <section class="fact-hero">
+                <div class="fact-hero-content">
+                    <div class="fact-icon-wrapper">
+                        <i class="ph ph-magnifying-glass"></i>
+                    </div>
+                    <h1>Fact Checker</h1>
+                    <p class="fact-subtitle">Verify claims against official government documents</p>
+                </div>
+            </section>
+
+            <!-- Input Section -->
+            <section class="fact-input-section">
+                <div class="input-card">
+                    <div class="input-header">
+                        <h2>Enter a claim to verify</h2>
+                        <p>Paste a claim, statement, or social media post you want to fact-check</p>
+                    </div>
+
+                    <div class="claim-input-wrapper">
+                        <textarea id="claim-input" class="claim-textarea" 
+                            placeholder="Example: 'The One Nation One Election bill will remove local body elections'"></textarea>
+                        <div class="input-footer">
+                            <div class="language-selector">
+                                <label for="language-select">Response in:</label>
+                                <select id="language-select">
+                                    <option value="en">English</option>
+                                    <option value="hi">हिंदी (Hindi)</option>
+                                    <option value="ta">தமிழ் (Tamil)</option>
+                                    <option value="te">తెలుగు (Telugu)</option>
+                                    <option value="bn">বাংলা (Bengali)</option>
+                                    <option value="mr">मराठी (Marathi)</option>
+                                </select>
+                            </div>
+                            <button id="check-btn" class="check-button">
+                                <i class="ph ph-seal-check"></i>
+                                <span>Check Claim</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Loading State -->
+            <section id="loading-section" class="loading-section" style="display: none;">
+                <div class="loading-content">
+                    <div class="loading-spinner"></div>
+                    <p>Searching official documents...</p>
+                </div>
+            </section>
+
+            <!-- Results Section -->
+            <section id="results-section" class="results-section" style="display: none;">
+                <!-- Verdict Card -->
+                <div class="verdict-card" id="verdict-card">
+                    <div class="verdict-header">
+                        <div class="verdict-icon" id="verdict-icon">
+                            <i class="ph ph-check-circle"></i>
+                        </div>
+                        <div class="verdict-text">
+                            <span class="verdict-label">Verdict</span>
+                            <h2 id="verdict-title">TRUE</h2>
+                        </div>
+                    </div>
+                    <div class="verdict-meter">
+                        <div class="meter-bar">
+                            <div class="meter-fill" id="confidence-meter" style="width: 85%"></div>
+                        </div>
+                        <span class="confidence-label">Confidence: <span id="confidence-value">85%</span></span>
+                    </div>
+                </div>
+
+                <!-- Claim Display -->
+                <div class="claim-display">
+                    <h3>Claim Checked:</h3>
+                    <blockquote id="claim-quote"></blockquote>
+                </div>
+
+                <!-- Explanation -->
+                <div class="explanation-card">
+                    <h3><i class="ph ph-info"></i> Explanation</h3>
+                    <p id="explanation-text"></p>
+                </div>
+
+                <!-- Evidence Section -->
+                <div class="evidence-section">
+                    <h3><i class="ph ph-files"></i> Evidence from Official Documents</h3>
+                    <div id="evidence-list" class="evidence-list">
+                        <!-- Evidence cards will be inserted here -->
+                    </div>
+                </div>
+
+                <!-- Actions -->
+                <div class="result-actions">
+                    <button id="new-check-btn" class="secondary-button">
+                        <i class="ph ph-arrow-left"></i>
+                        Check Another Claim
+                    </button>
+                    <button id="share-btn" class="primary-button">
+                        <i class="ph ph-share-network"></i>
+                        Share Result
+                    </button>
+                </div>
+            </section>
+
+            <!-- Example Claims -->
+            <section class="examples-section">
+                <h3>Try these examples:</h3>
+                <div class="example-chips">
+                    <button class="example-chip" data-claim="The One Nation One Election bill will remove local body elections">
+                        ONOE removes local elections?
+                    </button>
+                    <button class="example-chip" data-claim="The Waqf Amendment Bill allows government to take over all Waqf properties">
+                        Waqf Bill property takeover?
+                    </button>
+                    <button class="example-chip" data-claim="The Finance Act 2024 increases tax on income above 50 lakhs">
+                        Finance Act tax increase?
+                    </button>
+                </div>
+            </section>
+
+            <!-- How It Works -->
+            <section class="how-it-works">
+                <h3>How it works</h3>
+                <div class="steps-grid">
+                    <div class="step-card">
+                        <div class="step-number">1</div>
+                        <h4>Enter Claim</h4>
+                        <p>Paste any claim about government policy</p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">2</div>
+                        <h4>AI Search</h4>
+                        <p>We search official documents using AI</p>
+                    </div>
+                    <div class="step-card">
+                        <div class="step-number">3</div>
+                        <h4>Get Verdict</h4>
+                        <p>See the truth with document citations</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Disclaimer -->
+            <section class="disclaimer-section">
+                <div class="disclaimer-card">
+                    <i class="ph ph-warning"></i>
+                    <p><strong>Disclaimer:</strong> This tool verifies claims against indexed government documents only. 
+                    An "unverifiable" result means we don't have the relevant document, not that the claim is false. 
+                    Always refer to official sources for final confirmation.</p>
+                </div>
+            </section>
+        </main>
+
+        <footer class="govt-footer">
+            <div class="footer-bottom-strip">
+                <div class="bottom-container container">
+                    <div class="footer-links">
+                        <a href="index.html">Home</a>
+                        <a href="#">Sources</a>
+                        <a href="#">Disclaimer</a>
+                        <a href="#">About</a>
+                    </div>
+                    <p class="source-note">Information sourced from official Indian government portals.</p>
+                </div>
+            </div>
+        </footer>
+    </div>
+    <script src="main.js"></script>
+    <script src="fact-checker.js"></script>
+</body>
+
+</html>

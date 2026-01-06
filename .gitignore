@@ -1,0 +1,41 @@
+# Niti Satya AI - Dependencies and Environment
+.env
+*.pyc
+__pycache__/
+venv/
+.venv/
+*.egg-info/
+dist/
+build/
+
+# Azure credentials
+*.pem
+*.key
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Downloaded PDFs (large files - download separately)
+backend/data/documents/pdfs/*.pdf
+
+# Local database
+*.db
+*.sqlite3
+
+# Node modules (if any)
+node_modules/
+
+# Test outputs
+.pytest_cache/
+.coverage
+htmlcov/

@@ -1,0 +1,148 @@
+{
+  "income-tax-2025": {
+    "id": "income-tax-2025",
+    "title": "The Income-tax Bill, 2025",
+    "category": "bill",
+    "file_path": "data/govt-portal/The_Income-tax_Bill,_2025.pdf",
+    "source_url": "https://sansad.in",
+    "source_ministry": "Ministry of Finance",
+    "published_date": "2025-02-13",
+    "summary": "The Income-tax Bill, 2025 consolidates and simplifies India's income tax laws. It reduces the total number of sections from 819 to 536, removes obsolete provisions, and uses simpler language for better understanding.",
+    "key_points": [
+      "Sections reduced from 819 to 536",
+      "Simpler language replacing legal jargon",
+      "Obsolete provisions removed",
+      "New tax regime as default",
+      "Streamlined exemption claims"
+    ],
+    "page_count": 622,
+    "pdf_url": "/backend/data/govt-portal/The_Income-tax_Bill,_2025.pdf",
+    "created_at": "2025-02-13T10:00:00Z",
+    "updated_at": "2025-02-13T10:00:00Z"
+  },
+  "income-tax-select-committee": {
+    "id": "income-tax-select-committee",
+    "title": "Select Committee Report - Income Tax Bill 2025",
+    "category": "report",
+    "file_path": "data/govt-portal/Select_Committee_Report_the_Income-Tax_Bill,2025.pdf",
+    "source_url": "https://sansad.in",
+    "source_ministry": "Rajya Sabha",
+    "published_date": "2025-03-01",
+    "summary": "Detailed report from the Select Committee reviewing the Income Tax Bill 2025, including recommendations and observations from various stakeholders.",
+    "key_points": [
+      "Committee recommendations for amendments",
+      "Stakeholder observations addressed",
+      "Compliance simplification suggestions",
+      "Implementation timeline recommendations"
+    ],
+    "page_count": 1200,
+    "pdf_url": "/backend/data/govt-portal/Select_Committee_Report_the_Income-Tax_Bill,2025.pdf",
+    "created_at": "2025-03-01T10:00:00Z",
+    "updated_at": "2025-03-01T10:00:00Z"
+  },
+  "shiksha-bill-2025": {
+    "id": "shiksha-bill-2025",
+    "title": "Viksit Bharat Shiksha Adhishthan Bill, 2025",
+    "category": "bill",
+    "file_path": "data/govt-portal/Viksit_Bharat_Shiksha_Adhishthan_Bill,_2025.pdf",
+    "source_url": "https://sansad.in",
+    "source_ministry": "Ministry of Education",
+    "published_date": "2025-01-10",
+    "summary": "Establishes the Viksit Bharat Shiksha Adhishthan Commission to regulate and accredit higher education in India, merging functions of UGC, AICTE, and NCTE.",
+    "key_points": [
+      "New unified higher education regulator",
+      "Merges UGC, AICTE, NCTE functions",
+      "Accreditation Council for quality assurance",
+      "Standards Council for curriculum",
+      "Regulatory Council for compliance"
+    ],
+    "page_count": 45,
+    "pdf_url": "/backend/data/govt-portal/Viksit_Bharat_Shiksha_Adhishthan_Bill,_2025.pdf",
+    "created_at": "2025-01-10T10:00:00Z",
+    "updated_at": "2025-01-10T10:00:00Z"
+  },
+  "securities-code-2025": {
+    "id": "securities-code-2025",
+    "title": "Securities Markets Code, 2025",
+    "category": "bill",
+    "file_path": "data/govt-portal/Securities_Markets_Code,2025.pdf",
+    "source_url": "https://sansad.in",
+    "source_ministry": "Ministry of Finance",
+    "published_date": "2025-01-15",
+    "summary": "Consolidates and modernizes securities market regulations in India. Replaces SEBI Act, Securities Contracts Act, and other laws with a unified code.",
+    "key_points": [
+      "Unified securities regulation code",
+      "Modernized investor protection",
+      "Simplified compliance framework",
+      "Enhanced SEBI powers",
+      "Digital infrastructure provisions"
+    ],
+    "page_count": 180,
+    "pdf_url": "/backend/data/govt-portal/Securities_Markets_Code,2025.pdf",
+    "created_at": "2025-01-15T10:00:00Z",
+    "updated_at": "2025-01-15T10:00:00Z"
+  },
+  "vb-gramg-bill-2025": {
+    "id": "vb-gramg-bill-2025",
+    "title": "Viksit Bharat Rozgar Guarantee (Gramin) Bill, 2025",
+    "category": "bill",
+    "file_path": "data/govt-portal/Viksit_Bharat–Guarantee_for_Rozgar_and_Ajeevika_Mission_(Gramin)_VB–G_RAM_G_Bill,2025.pdf",
+    "source_url": "https://sansad.in",
+    "source_ministry": "Ministry of Rural Development",
+    "published_date": "2025-01-20",
+    "summary": "Employment guarantee scheme for rural India. Ensures 100 days of guaranteed employment for rural households with focus on skill development.",
+    "key_points": [
+      "100 days guaranteed employment",
+      "Skill development integration",
+      "Livelihood support for rural areas",
+      "Digital payment mechanism",
+      "Work certification system"
+    ],
+    "page_count": 65,
+    "pdf_url": "/backend/data/govt-portal/Viksit_Bharat–Guarantee_for_Rozgar_and_Ajeevika_Mission_(Gramin)_VB–G_RAM_G_Bill,2025.pdf",
+    "created_at": "2025-01-20T10:00:00Z",
+    "updated_at": "2025-01-20T10:00:00Z"
+  },
+  "electricity-bill-2025": {
+    "id": "electricity-bill-2025",
+    "title": "Electricity (Amendment) Bill, 2025",
+    "category": "bill",
+    "file_path": "data/govt-portal/Brief_Draft-Electricity_(A)_Bill_2025.pdf",
+    "source_url": "https://sansad.in",
+    "source_ministry": "Ministry of Power",
+    "published_date": "2025-01-25",
+    "summary": "Draft amendments to the Electricity Act to promote renewable energy, improve electricity distribution, and enhance consumer rights.",
+    "key_points": [
+      "Renewable energy promotion",
+      "Distribution network improvements",
+      "Consumer rights enhancement",
+      "Smart grid provisions",
+      "Subsidy reforms"
+    ],
+    "page_count": 35,
+    "pdf_url": "/backend/data/govt-portal/Brief_Draft-Electricity_(A)_Bill_2025.pdf",
+    "created_at": "2025-01-25T10:00:00Z",
+    "updated_at": "2025-01-25T10:00:00Z"
+  },
+  "vikasit-bharat-main": {
+    "id": "vikasit-bharat-main",
+    "title": "Viksit Bharat Bill - Main Document",
+    "category": "bill",
+    "file_path": "data/govt-portal/vikasit_bharatbill.pdf",
+    "source_url": "https://sansad.in",
+    "source_ministry": "Government of India",
+    "published_date": "2025-01-08",
+    "summary": "The main Viksit Bharat Bill outlining India's development vision for becoming a developed nation by 2047.",
+    "key_points": [
+      "Vision 2047 development goals",
+      "Sectoral development priorities",
+      "Infrastructure modernization",
+      "Human capital development",
+      "Technology advancement"
+    ],
+    "page_count": 520,
+    "pdf_url": "/backend/data/govt-portal/vikasit_bharatbill.pdf",
+    "created_at": "2025-01-08T10:00:00Z",
+    "updated_at": "2025-01-08T10:00:00Z"
+  }
+}

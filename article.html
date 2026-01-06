@@ -1,0 +1,408 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document Viewer - Niti Satya AI</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="document-viewer.css">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+</head>
+
+<body class="document-viewer-page">
+    <div id="app">
+        <!-- Minimal Top Bar for Document Viewer -->
+        <header class="doc-viewer-header">
+            <a href="index.html" class="back-btn">
+                <i class="ph ph-arrow-left"></i>
+                <span>Back to Feed</span>
+            </a>
+            <div class="doc-title-bar">
+                <span id="doc-title">Loading document...</span>
+            </div>
+            <div class="doc-actions">
+                <button class="action-btn" id="download-btn" title="Download PDF">
+                    <i class="ph ph-download-simple"></i>
+                </button>
+                <button class="action-btn" id="share-btn" title="Share">
+                    <i class="ph ph-share-network"></i>
+                </button>
+            </div>
+        </header>
+
+        <!-- PDF Document Viewer (Full Screen) -->
+        <main class="pdf-viewer-container">
+            <div id="pdf-viewer" class="pdf-viewer">
+                <!-- PDF will be embedded here -->
+                <div class="pdf-loading">
+                    <div class="loading-spinner"></div>
+                    <p>Loading document...</p>
+                </div>
+                <!-- Fallback message for when PDF isn't available -->
+                <div id="pdf-fallback" class="pdf-fallback" style="display: none;">
+                    <i class="ph ph-file-pdf"></i>
+                    <h3>Document Preview</h3>
+                    <p id="pdf-summary">This document contains important government information.</p>
+                    <a id="pdf-link" href="#" class="view-original-btn" target="_blank">
+                        <i class="ph ph-arrow-square-out"></i>
+                        View Original PDF
+                    </a>
+                </div>
+            </div>
+        </main>
+
+        <!-- Floating AI Assistant Button (Chatbot Style) -->
+        <button id="ai-fab" class="ai-fab" aria-label="Open AI Assistant">
+            <i class="ph ph-sparkle"></i>
+            <span class="fab-label">Explain This</span>
+        </button>
+
+        <!-- Bottom Curtain Panel (Slides Up) -->
+        <div id="curtain-panel" class="curtain-panel">
+            <!-- Pull Handle -->
+            <div class="curtain-handle" id="curtain-handle">
+                <div class="handle-bar"></div>
+            </div>
+
+            <!-- Panel Header with Tabs -->
+            <div class="curtain-header">
+                <h3 class="curtain-title">
+                    <i class="ph ph-sparkle"></i>
+                    AI Document Assistant
+                </h3>
+                <button id="curtain-close" class="curtain-close">
+                    <i class="ph ph-x"></i>
+                </button>
+            </div>
+
+            <!-- Tab Navigation -->
+            <div class="curtain-tabs">
+                <button class="tab-btn active" data-tab="summary">
+                    <i class="ph ph-article"></i>
+                    Summary
+                </button>
+                <button class="tab-btn" data-tab="timeline">
+                    <i class="ph ph-clock-clockwise"></i>
+                    Timeline
+                </button>
+                <button class="tab-btn" data-tab="ask">
+                    <i class="ph ph-chat-circle-text"></i>
+                    Ask
+                </button>
+                <button class="tab-btn" data-tab="factcheck">
+                    <i class="ph ph-check-circle"></i>
+                    Fact Check
+                </button>
+            </div>
+
+            <!-- Tab Content -->
+            <div class="curtain-content">
+                <!-- Summary Tab -->
+                <div class="tab-content active" id="tab-summary">
+                    <div class="summary-section">
+                        <h4>What is this document?</h4>
+                        <p id="doc-summary-text" class="summary-text">Loading summary...</p>
+                    </div>
+                    <div class="key-points-section">
+                        <h4>Key Points</h4>
+                        <ul id="key-points-list" class="key-points-list">
+                            <li>Loading...</li>
+                        </ul>
+                    </div>
+                    <div class="meta-section">
+                        <div class="meta-item">
+                            <i class="ph ph-buildings"></i>
+                            <span id="doc-ministry">Ministry of Law & Justice</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="ph ph-calendar"></i>
+                            <span id="doc-date">Published Date</span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="ph ph-files"></i>
+                            <span id="doc-pages">Page Count</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Timeline Tab - PRS India Style Legislative Journey -->
+                <div class="tab-content" id="tab-timeline">
+                    <div class="legislative-journey" id="legislative-journey">
+                        <!-- Journey Header -->
+                        <div class="journey-title">
+                            <span id="journey-bill-name" class="bill-name">Loading Bill Name...</span>
+                        </div>
+                        <div id="journey-ministry" class="journey-ministry">Ministry: Loading...</div>
+
+                        <!-- Legislative Progress Steps (PRS Style) -->
+                        <div class="journey-wrapper">
+                            <div class="journey-steps" id="journey-steps">
+                                <!-- Steps will be dynamically inserted -->
+                                <div class="journey-step introduced">
+                                    <div class="step-status">Introduced</div>
+                                    <div class="step-box">
+                                        <div class="step-house">Lok Sabha</div>
+                                    </div>
+                                    <div class="step-date">Loading...</div>
+                                </div>
+                                <div class="step-arrow">
+                                    <svg viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z" />
+                                    </svg>
+                                </div>
+                                <div class="journey-step in-committee">
+                                    <div class="step-status">In Committee</div>
+                                    <div class="step-box">
+                                        <div class="step-house">Standing Committee</div>
+                                    </div>
+                                    <div class="step-date">Loading...</div>
+                                </div>
+                                <div class="step-arrow">
+                                    <svg viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M8.59 16.59L13.17 12 8.59 7.41 10 6l6 6-6 6-1.41-1.41z" />
+                                    </svg>
+                                </div>
+                                <div class="journey-step passed">
+                                    <div class="step-status">Passed</div>
+                                    <div class="step-box">
+                                        <div class="step-house">Rajya Sabha</div>
+                                    </div>
+                                    <div class="step-date">Pending</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Pagination dots -->
+                        <div class="journey-pagination" id="journey-pagination">
+                            <span class="journey-dot active"></span>
+                            <span class="journey-dot"></span>
+                            <span class="journey-dot"></span>
+                        </div>
+                    </div>
+
+                    <!-- Fallback: Detailed Timeline (Before/Change/Result) -->
+                    <div class="timeline-container" id="detailed-timeline" style="margin-top: 24px;">
+                        <h4 style="color: #9CA3AF; font-size: 12px; text-transform: uppercase; margin-bottom: 12px;">
+                            Simply Put</h4>
+
+                        <!-- Before -->
+                        <div class="timeline-section before">
+                            <div class="timeline-icon">
+                                <i class="ph ph-clock-counter-clockwise"></i>
+                            </div>
+                            <div class="timeline-card">
+                                <h4 class="timeline-label">Before</h4>
+                                <h5 id="timeline-before-title" class="timeline-title">Previous State</h5>
+                                <p id="timeline-before-summary" class="timeline-text">Loading...</p>
+                                <ul id="timeline-before-points" class="timeline-points"></ul>
+                            </div>
+                        </div>
+
+                        <!-- Arrow -->
+                        <div class="timeline-arrow">
+                            <i class="ph ph-arrow-down"></i>
+                        </div>
+
+                        <!-- Change -->
+                        <div class="timeline-section change">
+                            <div class="timeline-icon">
+                                <i class="ph ph-swap"></i>
+                            </div>
+                            <div class="timeline-card">
+                                <h4 class="timeline-label">What Changed</h4>
+                                <h5 id="timeline-change-title" class="timeline-title">Proposed Changes</h5>
+                                <p id="timeline-change-summary" class="timeline-text">Loading...</p>
+                                <ul id="timeline-change-points" class="timeline-points"></ul>
+                            </div>
+                        </div>
+
+                        <!-- Arrow -->
+                        <div class="timeline-arrow">
+                            <i class="ph ph-arrow-down"></i>
+                        </div>
+
+                        <!-- Result -->
+                        <div class="timeline-section result">
+                            <div class="timeline-icon">
+                                <i class="ph ph-target"></i>
+                            </div>
+                            <div class="timeline-card">
+                                <h4 class="timeline-label">Result</h4>
+                                <h5 id="timeline-result-title" class="timeline-title">Expected Outcome</h5>
+                                <p id="timeline-result-summary" class="timeline-text">Loading...</p>
+                                <ul id="timeline-result-points" class="timeline-points"></ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Ask Tab (Q&A) -->
+                <div class="tab-content" id="tab-ask">
+                    <div class="suggested-questions">
+                        <h4>Common Questions</h4>
+                        <div class="question-chips">
+                            <button class="question-chip" data-question="What is the main purpose of this document?">
+                                What is the main purpose?
+                            </button>
+                            <button class="question-chip" data-question="How does this affect common citizens?">
+                                How does this affect me?
+                            </button>
+                            <button class="question-chip" data-question="What was the previous rule or law?">
+                                What was the previous rule?
+                            </button>
+                            <button class="question-chip" data-question="When does this come into effect?">
+                                When does it take effect?
+                            </button>
+                            <button class="question-chip" data-question="Are there any exemptions?">
+                                Any exemptions?
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="qa-section">
+                        <div id="qa-messages" class="qa-messages">
+                            <!-- Messages will be added here -->
+                            <div class="qa-message ai-message">
+                                <div class="message-avatar">
+                                    <i class="ph ph-robot"></i>
+                                </div>
+                                <div class="message-content">
+                                    <p>I can answer questions about this document. Click a suggested question or type
+                                        your own below.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="qa-input-container">
+                        <input type="text" id="qa-input" class="qa-input"
+                            placeholder="Ask a question about this document...">
+                        <button id="qa-send" class="qa-send-btn">
+                            <i class="ph ph-paper-plane-tilt"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Fact Check Tab -->
+                <div class="tab-content" id="tab-factcheck">
+                    <div class="factcheck-intro">
+                        <h4><i class="ph ph-check-circle"></i> Verify Claims</h4>
+                        <p>Paste a URL or enter a claim to check against official government documents.</p>
+                    </div>
+
+                    <!-- Mode Toggle -->
+                    <div class="factcheck-mode-toggle">
+                        <button class="mode-btn active" id="mode-url" onclick="setFactCheckMode('url')">
+                            <i class="ph ph-link"></i> Paste Link
+                        </button>
+                        <button class="mode-btn" id="mode-claim" onclick="setFactCheckMode('claim')">
+                            <i class="ph ph-text-aa"></i> Enter Claim
+                        </button>
+                    </div>
+
+                    <!-- URL Input Mode -->
+                    <div id="url-input-section" class="factcheck-input-container">
+                        <input type="url" id="factcheck-url-input" class="factcheck-url-input"
+                            placeholder="Paste YouTube, Twitter, Instagram, Facebook, or article URL...">
+                        <textarea id="factcheck-context" class="factcheck-context"
+                            placeholder="(Optional) Specific claim from the video/article to verify..."
+                            rows="2"></textarea>
+                        <button class="factcheck-submit-btn" onclick="checkFactFromURL()">
+                            <i class="ph ph-magnifying-glass"></i>
+                            Check Link
+                        </button>
+                        <p class="factcheck-hint">
+                            <i class="ph ph-info"></i>
+                            Works with: YouTube, Twitter/X, Instagram, Facebook, News articles
+                        </p>
+                    </div>
+
+                    <!-- Claim Input Mode (hidden by default) -->
+                    <div id="claim-input-section" class="factcheck-input-container" style="display: none;">
+                        <textarea id="factcheck-input" class="factcheck-input"
+                            placeholder="Paste a claim to verify... e.g., 'The new tax bill reduces income tax rates for all brackets'"
+                            rows="3"></textarea>
+                        <button id="factcheck-submit" class="factcheck-submit-btn" onclick="checkFact()">
+                            <i class="ph ph-magnifying-glass"></i>
+                            Check Claim
+                        </button>
+                    </div>
+
+                    <div id="factcheck-result" class="factcheck-result" style="display: none;">
+                        <div class="verdict-banner" id="verdict-banner">
+                            <div class="verdict-icon"><i class="ph ph-check-circle"></i></div>
+                            <div class="verdict-text">
+                                <span class="verdict-label" id="verdict-label">VERDICT</span>
+                                <span class="verdict-confidence" id="verdict-confidence">Confidence: 85%</span>
+                            </div>
+                        </div>
+
+                        <div class="factcheck-explanation">
+                            <h5>Explanation</h5>
+                            <p id="factcheck-explanation-text">Based on our analysis of indexed documents...</p>
+                        </div>
+
+                        <div class="evidence-section">
+                            <h5><i class="ph ph-files"></i> Evidence from Official Documents</h5>
+                            <div id="evidence-list" class="evidence-list">
+                                <!-- Evidence items will be added here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div id="factcheck-loading" class="factcheck-loading" style="display: none;">
+                        <div class="loading-spinner"></div>
+                        <p>Analyzing claim against official documents...</p>
+                    </div>
+
+                    <div class="factcheck-examples">
+                        <h5>Try these examples:</h5>
+                        <div class="example-claims">
+                            <button class="example-claim"
+                                onclick="setFactCheckClaim('The Income Tax Bill 2025 reduces the number of sections from 819 to 536')">
+                                Income Tax Bill reduces sections
+                            </button>
+                            <button class="example-claim"
+                                onclick="setFactCheckClaim('UGC will be merged with AICTE under the new education bill')">
+                                UGC merges with AICTE
+                            </button>
+                            <button class="example-claim"
+                                onclick="setFactCheckClaim('One Nation One Election requires constitutional amendment')">
+                                ONOE needs amendment
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Language Selector -->
+            <div class="curtain-footer">
+                <div class="language-selector">
+                    <i class="ph ph-translate"></i>
+                    <select id="language-select">
+                        <option value="en">English</option>
+                        <option value="hi">हिंदी</option>
+                        <option value="ta">தமிழ்</option>
+                        <option value="te">తెలుగు</option>
+                        <option value="mr">मराठी</option>
+                        <option value="bn">বাংলা</option>
+                    </select>
+                </div>
+                <button id="tts-btn" class="tts-btn" title="Read aloud">
+                    <i class="ph ph-speaker-high"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Overlay for curtain panel -->
+        <div id="curtain-overlay" class="curtain-overlay"></div>
+    </div>
+
+    <script src="document-viewer.js"></script>
+</body>
+
+</html>
