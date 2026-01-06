@@ -2343,3 +2343,144 @@ body.menu-open .menu-footer {
     font-size: 0.8rem;
   }
 }
+
+/* ===== SEARCH BAR STYLES ===== */
+.search-container {
+  margin-bottom: var(--spacing-lg);
+}
+
+.search-input-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  max-width: 600px;
+  margin: 0 auto var(--spacing-sm);
+}
+
+.search-icon {
+  position: absolute;
+  left: 16px;
+  font-size: 1.25rem;
+  color: var(--text-light);
+  pointer-events: none;
+}
+
+.search-input {
+  width: 100%;
+  padding: 14px 48px 14px 48px;
+  font-size: 1rem;
+  font-family: var(--font-main);
+  border: 2px solid #E5E7EB;
+  border-radius: 50px;
+  background: var(--bg-card);
+  color: var(--text-primary);
+  transition: all 0.3s ease;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: var(--color-navy);
+  box-shadow: 0 0 0 4px rgba(0, 0, 128, 0.1);
+}
+
+.search-input::placeholder {
+  color: var(--text-light);
+}
+
+.search-clear-btn {
+  position: absolute;
+  right: 12px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #E5E7EB;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  transition: all 0.2s ease;
+}
+
+.search-clear-btn:hover {
+  background: var(--color-navy);
+  color: white;
+}
+
+.search-hint {
+  text-align: center;
+  font-size: 0.8rem;
+  color: var(--text-light);
+}
+
+/* No Results Message */
+.no-results-message {
+  text-align: center;
+  padding: 60px 20px;
+  background: var(--bg-accent-light);
+  border-radius: 12px;
+  margin-bottom: var(--spacing-lg);
+}
+
+.no-results-message i {
+  font-size: 4rem;
+  color: var(--text-light);
+  margin-bottom: var(--spacing-md);
+  display: block;
+}
+
+.no-results-message h4 {
+  font-size: 1.5rem;
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-sm);
+}
+
+.no-results-message p {
+  color: var(--text-secondary);
+  font-size: 1rem;
+}
+
+.reset-link {
+  color: var(--color-navy);
+  text-decoration: underline;
+  font-weight: 600;
+  background: none;
+  border: none;
+  cursor: pointer;
+}
+
+.reset-link:hover {
+  color: var(--color-saffron);
+}
+
+/* Search highlight effect on cards */
+.news-card-vertical.search-match {
+  animation: highlightPulse 0.5s ease;
+}
+
+@keyframes highlightPulse {
+  0% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.02);
+    box-shadow: 0 0 20px rgba(255, 153, 51, 0.3);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Mobile search adjustments */
+@media (max-width: 768px) {
+  .search-input {
+    font-size: 0.9rem;
+    padding: 12px 44px 12px 44px;
+  }
+
+  .search-icon {
+    font-size: 1.1rem;
+    left: 14px;
+  }
+}

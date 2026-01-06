@@ -226,6 +226,139 @@ function filterByCategory(category) {
 // Make globally accessible
 window.filterByCategory = filterByCategory;
 
+// ============== Document Search ==============
+/**
+ * Search documents by keyword
+ * Searches title, excerpt, and data attributes
+ */
+function searchDocuments(query) {
+    const searchInput = document.getElementById('document-search');
+    const clearBtn = document.getElementById('search-clear');
+    const cards = document.querySelectorAll('.news-card-vertical');
+    const noResults = document.getElementById('no-results');
+    const newsGrid = document.getElementById('news-feed-container');
+    const categoryFilters = document.getElementById('category-filters');
+
+    // Show/hide clear button
+    if (clearBtn) {
+        clearBtn.style.display = query.length > 0 ? 'flex' : 'none';
+    }
+
+    // If empty query, show all
+    if (!query || query.trim() === '') {
+        cards.forEach(card => {
+            card.style.display = '';
+            card.classList.remove('search-match');
+        });
+        if (noResults) noResults.style.display = 'none';
+        if (newsGrid) newsGrid.style.display = '';
+        if (categoryFilters) categoryFilters.style.display = '';
+        return;
+    }
+
+    const searchTerm = query.toLowerCase().trim();
+    let matchCount = 0;
+
+    // Search keywords mapping for better matching
+    const keywordAliases = {
+        'gramg': ['gram', 'gramg', 'rural', 'rozgar', 'employment', 'mgnrega', 'village'],
+        'tax': ['tax', 'income', 'finance', 'revenue', 'itr'],
+        'education': ['education', 'shiksha', 'ugc', 'aicte', 'college', 'university', 'school'],
+        'electricity': ['electricity', 'power', 'energy', 'bijli', 'renewable', 'solar'],
+        'securities': ['securities', 'sebi', 'stock', 'market', 'shares', 'investment'],
+        'viksit': ['viksit', 'bharat', 'development', 'vision', '2047'],
+        'aravali': ['aravali', 'aravalli', 'forest', 'environment', 'supreme court', 'mining']
+    };
+
+    cards.forEach(card => {
+        const title = card.querySelector('.card-headline')?.textContent?.toLowerCase() || '';
+        const excerpt = card.querySelector('.card-excerpt')?.textContent?.toLowerCase() || '';
+        const category = card.dataset.category?.toLowerCase() || '';
+        const fullText = `${title} ${excerpt} ${category}`;
+
+        // Direct match
+        let isMatch = fullText.includes(searchTerm);
+
+        // Check keyword aliases
+        if (!isMatch) {
+            for (const [key, aliases] of Object.entries(keywordAliases)) {
+                if (aliases.some(alias => searchTerm.includes(alias) || alias.includes(searchTerm))) {
+                    if (aliases.some(alias => fullText.includes(alias))) {
+                        isMatch = true;
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (isMatch) {
+            card.style.display = '';
+            card.classList.add('search-match');
+            matchCount++;
+        } else {
+            card.style.display = 'none';
+            card.classList.remove('search-match');
+        }
+    });
+
+    // Show/hide no results message
+    if (noResults && newsGrid) {
+        if (matchCount === 0) {
+            noResults.style.display = 'block';
+            newsGrid.style.display = 'none';
+        } else {
+            noResults.style.display = 'none';
+            newsGrid.style.display = '';
+        }
+    }
+
+    // Hide category filters during search
+    if (categoryFilters) {
+        categoryFilters.style.display = query.length > 0 ? 'none' : '';
+    }
+}
+
+/**
+ * Clear search and show all documents
+ */
+function clearSearch() {
+    const searchInput = document.getElementById('document-search');
+    const clearBtn = document.getElementById('search-clear');
+    const cards = document.querySelectorAll('.news-card-vertical');
+    const noResults = document.getElementById('no-results');
+    const newsGrid = document.getElementById('news-feed-container');
+    const categoryFilters = document.getElementById('category-filters');
+
+    // Clear input
+    if (searchInput) {
+        searchInput.value = '';
+        searchInput.focus();
+    }
+
+    // Hide clear button
+    if (clearBtn) {
+        clearBtn.style.display = 'none';
+    }
+
+    // Show all cards
+    cards.forEach(card => {
+        card.style.display = '';
+        card.classList.remove('search-match');
+    });
+
+    // Hide no results, show grid
+    if (noResults) noResults.style.display = 'none';
+    if (newsGrid) newsGrid.style.display = '';
+    if (categoryFilters) categoryFilters.style.display = '';
+
+    // Reset category filter to 'all'
+    filterByCategory('all');
+}
+
+// Make globally accessible
+window.searchDocuments = searchDocuments;
+window.clearSearch = clearSearch;
+
 // ============== AI Panel ==============
 function initAIPanel() {
     const aiTrigger = document.getElementById('ai-trigger-btn');
