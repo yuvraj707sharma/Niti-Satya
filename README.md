@@ -1,6 +1,6 @@
 # Niti Satya AI (नीति सत्य) 🇮🇳
 
-> **🏆 Microsoft Imagine Cup 2025 Submission**
+> **🏆 Microsoft Imagine Cup 2026 Submission**
 
 AI-powered platform to combat misinformation about Indian government policies by fact-checking claims against official documents.
 

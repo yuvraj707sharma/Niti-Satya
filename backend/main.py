@@ -32,7 +32,7 @@ app = FastAPI(
     - Azure AI Search (Vector database)
     - Azure Translator (Multi-language support)
     
-    Built for Microsoft Imagine Cup 2025
+    Built for Microsoft Imagine Cup 2026
     """,
     version="1.0.0",
     docs_url="/docs",
