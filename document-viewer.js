@@ -4,7 +4,7 @@
  */
 
 // API Configuration
-const API_BASE = 'http://localhost:8000/api';
+const API_BASE = 'https://niti-satya-production.up.railway.app/api';
 
 // State
 let currentDocId = null;
