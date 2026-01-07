@@ -49,6 +49,9 @@ app.add_middleware(
         "http://127.0.0.1:5500",
         "http://localhost:8080",
         "http://127.0.0.1:8080",
+        # Vercel production domains
+        "https://niti-satya.vercel.app",
+        "https://niti-satya-yuvraj707sharma.vercel.app",
         # Azure production domains
         "https://nitisatya-affwa8f5brapasf9.centralindia-01.azurewebsites.net",
         "https://nitisatya-affwa8f5brapasf9.scm.centralindia-01.azurewebsites.net",

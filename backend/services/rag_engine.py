@@ -83,16 +83,21 @@ class RAGEngine:
         question = self._sanitize_input(question)
         
         # Step 1: Retrieve relevant chunks
-        chunks = await self.search_service.search(
-            query=question,
-            document_id=document_id,
-            top_k=top_k,
-            use_vector=True
-        )
+        try:
+            chunks = await self.search_service.search(
+                query=question,
+                document_id=document_id,
+                top_k=top_k,
+                use_vector=True
+            )
+        except Exception as e:
+            # Handle Azure Search errors gracefully
+            print(f"⚠️ Search error: {e}")
+            chunks = []
         
         if not chunks:
             return {
-                "answer": "I couldn't find relevant information in the documents to answer your question.",
+                "answer": "I couldn't find relevant information in the documents to answer your question. This may be because the search index is still being set up.",
                 "citations": [],
                 "confidence": 0.0,
                 "language": language,
