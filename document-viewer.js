@@ -254,7 +254,20 @@ async function loadDocument(docId) {
             return;
         }
 
-        const doc = await response.json();
+        let doc = await response.json();
+
+        // DEMO FIX: If API doc lacks timeline/legislative_journey, merge from demo data if available
+        // This ensures the timeline tab works immediately for demo/presentation
+        const demoDocuments = getDemoDocuments(); // We'll move the demo data object to a function
+        const demoDoc = demoDocuments[docId] || demoDocuments['d1a2b3c4'];
+
+        if (demoDoc) {
+            if (!doc.timeline) doc.timeline = demoDoc.timeline;
+            if (!doc.legislative_journey) doc.legislative_journey = demoDoc.legislative_journey;
+            if (!doc.summary && demoDoc.summary) doc.summary = demoDoc.summary;
+            if (!doc.key_points && demoDoc.key_points) doc.key_points = demoDoc.key_points;
+        }
+
         displayDocument(doc);
     } catch (error) {
         console.log('API not available, using demo data');
@@ -263,10 +276,10 @@ async function loadDocument(docId) {
 }
 
 /**
- * Load demo document data
+ * Get demo documents data
  */
-function loadDemoDocument(docId) {
-    const demoDocuments = {
+function getDemoDocuments() {
+    return {
         // Income Tax Bill 2025
         'income-tax-2025': {
             id: 'income-tax-2025',
@@ -530,7 +543,13 @@ function loadDemoDocument(docId) {
             }
         }
     };
+}
 
+/**
+ * Load demo document data
+ */
+function loadDemoDocument(docId) {
+    const demoDocuments = getDemoDocuments();
     const doc = demoDocuments[docId] || demoDocuments['d1a2b3c4'];
     displayDocument(doc);
 }
