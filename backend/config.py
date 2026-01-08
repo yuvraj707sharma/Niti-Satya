@@ -43,7 +43,7 @@ class Settings(BaseSettings):
     debug: bool = Field(default=True, env="DEBUG")
     
     # Data paths
-    documents_dir: str = Field(default="data/documents")
+    documents_dir: str = Field(default=os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "documents"))
     
     class Config:
         env_file = ".env"
