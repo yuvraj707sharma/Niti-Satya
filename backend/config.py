@@ -23,16 +23,11 @@ class Settings(BaseSettings):
     azure_doc_intel_endpoint: str = Field(default="", env="AZURE_DOC_INTEL_ENDPOINT")
     azure_doc_intel_key: str = Field(default="", env="AZURE_DOC_INTEL_KEY")
     
-    # Azure AI Search
-    azure_search_endpoint: str = Field(default="", env="AZURE_SEARCH_ENDPOINT")
-    azure_search_key: str = Field(default="", env="AZURE_SEARCH_KEY")
-    azure_search_index_name: str = Field(default="govt-documents", env="AZURE_SEARCH_INDEX_NAME")
-    
     # Azure Translator
     azure_translator_key: str = Field(default="", env="AZURE_TRANSLATOR_KEY")
     azure_translator_region: str = Field(default="eastus", env="AZURE_TRANSLATOR_REGION")
     
-    # Optional: Azure OpenAI
+    # Azure OpenAI (primary LLM for Imagine Cup)
     azure_openai_endpoint: Optional[str] = Field(default=None, env="AZURE_OPENAI_ENDPOINT")
     azure_openai_key: Optional[str] = Field(default=None, env="AZURE_OPENAI_KEY")
     azure_openai_deployment: str = Field(default="gpt-4", env="AZURE_OPENAI_DEPLOYMENT")
@@ -62,7 +57,6 @@ class Settings(BaseSettings):
         return {
             "gemini": self._is_valid_key(self.gemini_api_key),
             "azure_doc_intel": bool(self.azure_doc_intel_endpoint) and self._is_valid_key(self.azure_doc_intel_key),
-            "azure_search": bool(self.azure_search_endpoint) and self._is_valid_key(self.azure_search_key),
             "azure_translator": self._is_valid_key(self.azure_translator_key),
             "azure_openai": bool(self.azure_openai_endpoint) and self._is_valid_key(self.azure_openai_key),
         }

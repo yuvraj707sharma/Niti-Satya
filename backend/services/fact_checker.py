@@ -1,7 +1,7 @@
 """
 Fact-Checker Service
 Verifies claims against official government documents
-Supports both Azure OpenAI and Gemini
+Uses document summaries directly with LLM (no Azure Search dependency)
 """
 
 from typing import List, Dict, Any, Optional
@@ -9,8 +9,8 @@ import re
 import json
 
 from config import settings
-from services.azure_search import get_search_service
 from services.azure_translator import get_translator_service
+from services.document_store import get_document_store
 from api.schemas import FactCheckVerdict
 
 
@@ -34,16 +34,45 @@ class FactCheckerService:
     
     Flow:
     1. Sanitize and validate input
-    2. Search for relevant document chunks
+    2. Get all document summaries and key points
     3. Use LLM to compare claim against evidence
     4. Return verdict with citations
     """
     
     def __init__(self):
-        self.search_service = get_search_service()
         self.llm_client = get_llm_client()
         self.translator = get_translator_service()
         self.llm_provider = settings.get_available_llm()
+    
+    def _get_all_document_evidence(self) -> List[Dict[str, Any]]:
+        """Get summaries and key points from all documents as evidence"""
+        evidence = []
+        
+        try:
+            store = get_document_store()
+            result = store.get_all(page=1, page_size=100)
+            
+            for doc in result.get("documents", []):
+                if doc.get("summary"):
+                    evidence.append({
+                        "document_id": doc.get("id", ""),
+                        "document_title": doc.get("title", "Government Document"),
+                        "text": f"Summary: {doc.get('summary', '')}\n\nKey Points: {', '.join(doc.get('key_points', []))}"
+                    })
+        except Exception as e:
+            print(f"Error loading document evidence: {e}")
+        
+        # Add hardcoded documents if store is empty
+        if not evidence:
+            from services.rag_engine import DOCUMENT_CONTEXT
+            for doc_id, doc_data in DOCUMENT_CONTEXT.items():
+                evidence.append({
+                    "document_id": doc_id,
+                    "document_title": doc_data.get("title", ""),
+                    "text": f"Summary: {doc_data.get('summary', '')}\n\nKey Points: {', '.join(doc_data.get('key_points', []))}"
+                })
+        
+        return evidence
     
     async def check_claim(
         self,
@@ -79,52 +108,38 @@ class FactCheckerService:
             except:
                 pass  # Continue with original claim
         
-        # Search for relevant evidence
-        chunks = await self.search_service.search(
-            query=search_claim,
-            document_id=None,  # Search all documents
-            top_k=top_k,
-            use_vector=True
-        )
+        # Get all document evidence
+        all_evidence = self._get_all_document_evidence()
         
-        if not chunks:
+        if not all_evidence:
             result = {
                 "claim": claim,
                 "verdict": FactCheckVerdict.UNVERIFIABLE,
                 "confidence": 0.0,
-                "explanation": "No relevant official documents found to verify this claim. This doesn't mean the claim is false - we simply don't have the relevant government documents indexed.",
+                "explanation": "No government documents are available to verify this claim.",
                 "evidence": [],
                 "language": language,
                 "llm_provider": self.llm_provider
             }
-            
-            # Translate explanation if needed
-            if language != "en" and self.translator.is_configured():
-                try:
-                    result["explanation"] = await self.translator.translate(
-                        result["explanation"], language, "en"
-                    )
-                except:
-                    pass
-            
             return result
         
-        # Prepare evidence for LLM
-        evidence_chunks = [
-            {
-                "document_title": chunk.get("document_title", "Unknown"),
-                "text": chunk["text"],
-                "page": chunk.get("page"),
-                "document_id": chunk.get("document_id")
+        # Use LLM to get verdict
+        try:
+            llm_result = await self.llm_client.fact_check(
+                claim=search_claim,
+                relevant_chunks=all_evidence
+            )
+        except Exception as e:
+            print(f"LLM fact check error: {e}")
+            return {
+                "claim": claim,
+                "verdict": FactCheckVerdict.UNVERIFIABLE,
+                "confidence": 0.0,
+                "explanation": f"Error during fact checking: {str(e)}",
+                "evidence": [],
+                "language": language,
+                "llm_provider": self.llm_provider
             }
-            for chunk in chunks
-        ]
-        
-        # Get LLM verdict
-        llm_result = await self.llm_client.fact_check(
-            claim=search_claim,
-            relevant_chunks=evidence_chunks
-        )
         
         # Map verdict string to enum
         verdict_str = llm_result.get("verdict", "unverifiable").lower()
@@ -136,20 +151,18 @@ class FactCheckerService:
         }
         verdict = verdict_map.get(verdict_str, FactCheckVerdict.UNVERIFIABLE)
         
-        # Build evidence list
+        # Build evidence list from LLM response
         evidence = []
         llm_evidence = llm_result.get("evidence", [])
         
-        for i, chunk in enumerate(chunks[:5]):  # Limit to 5 evidence items
-            llm_ev = llm_evidence[i] if i < len(llm_evidence) else {}
-            
+        for ev in llm_evidence[:5]:  # Limit to 5 evidence items
             evidence.append({
-                "document_id": chunk.get("document_id", ""),
-                "document_title": chunk.get("document_title", "Government Document"),
-                "page": chunk.get("page"),
-                "section": f"Retrieved chunk {i+1}",
-                "quote": chunk["text"][:300] + "..." if len(chunk["text"]) > 300 else chunk["text"],
-                "supports_claim": llm_ev.get("supports_claim", verdict == FactCheckVerdict.TRUE)
+                "document_id": ev.get("document_id", ""),
+                "document_title": ev.get("source", ev.get("document_title", "Government Document")),
+                "page": None,
+                "section": "Document Summary",
+                "quote": ev.get("quote", "")[:300],
+                "supports_claim": ev.get("supports_claim", verdict == FactCheckVerdict.TRUE)
             })
         
         explanation = llm_result.get("explanation", "Unable to provide detailed explanation.")

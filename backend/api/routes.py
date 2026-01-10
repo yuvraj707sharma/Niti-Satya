@@ -20,11 +20,9 @@ from api.schemas import (
 )
 from services.document_store import get_document_store
 from services.azure_doc_intel import get_document_intelligence
-from services.azure_search import get_search_service
 from services.rag_engine import get_rag_engine
 from services.fact_checker import get_fact_checker
 from services.azure_translator import get_translator_service
-from services.chunker import get_chunker
 from services.gemini_client import get_gemini_client
 from services.url_extractor import get_url_extractor
 from config import settings
@@ -233,14 +231,7 @@ async def upload_document(
             summary = full_text[:300] + "..."
             key_points = []
         
-        # Chunk document
-        chunker = get_chunker()
-        if pages:
-            chunks = chunker.chunk_pages(pages)
-        else:
-            chunks = chunker.chunk_text(full_text)
-        
-        # Store document
+        # Store document (no chunking/indexing needed - we use summaries directly)
         store = get_document_store()
         doc_id = store.create(
             title=title,
@@ -254,24 +245,11 @@ async def upload_document(
             page_count=page_count
         )
         
-        # Index in search
-        search = get_search_service()
-        await search.create_index()  # Ensure index exists
-        
-        indexed_count = await search.index_document_chunks(
-            document_id=doc_id,
-            title=title,
-            chunks=chunks,
-            category=category,
-            ministry=source_ministry or ""
-        )
-        
         return {
             "success": True,
             "document_id": doc_id,
             "title": title,
             "page_count": page_count,
-            "chunks_indexed": indexed_count,
             "summary": summary
         }
         
@@ -284,16 +262,12 @@ async def upload_document(
 
 @router.delete("/documents/{doc_id}", tags=["Documents"])
 async def delete_document(doc_id: str):
-    """Delete a document and its indexed chunks"""
+    """Delete a document"""
     store = get_document_store()
     doc = store.get(doc_id)
     
     if not doc:
         raise HTTPException(status_code=404, detail="Document not found")
-    
-    # Delete from search index
-    search = get_search_service()
-    deleted_chunks = await search.delete_document(doc_id)
     
     # Delete file
     file_path = doc.get("file_path")
@@ -304,8 +278,7 @@ async def delete_document(doc_id: str):
     store.delete(doc_id)
     
     return {
-        "success": True,
-        "deleted_chunks": deleted_chunks
+        "success": True
     }
 
 

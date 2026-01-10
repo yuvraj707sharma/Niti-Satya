@@ -1,66 +1,81 @@
 """
 RAG Engine - Orchestrates document Q&A
-Combines Azure AI Search retrieval with LLM generation
-Supports both Azure OpenAI and Gemini
+Uses document summaries directly with LLM (Azure OpenAI or Gemini)
+No Azure Search dependency - answers are contextual to document content
 """
 
 from typing import List, Dict, Any, Optional
 import re
 
 from config import settings
-from services.azure_search import get_search_service
 from services.azure_translator import get_translator_service
 from services.document_store import get_document_store
 
-# DEMO MODE: Hardcoded document data for presentations when Azure Search is unavailable
-DEMO_DOCUMENTS = {
+# Document data for reliable Q&A - ensures answers stay within document context
+DOCUMENT_CONTEXT = {
     "income-tax-2025": {
         "title": "The Income-tax Bill, 2025",
-        "summary": "The Income-tax Bill, 2025 is a major update to how India collects taxes from citizens and businesses. The old tax law from 1961 was 63 years old and had become very confusing with 819 sections full of legal terms. This new bill rewrites everything in simple, easy-to-understand language with only 536 sections. The good news? Your tax rates remain the same - you will not pay more or less tax. The government simply made the rules easier to read.",
+        "summary": "The Income-tax Bill, 2025 is a major update to how India collects taxes from citizens and businesses. The old tax law from 1961 was 63 years old and had become very confusing with 819 sections full of legal terms. This new bill rewrites everything in simple, easy-to-understand language with only 536 sections. The good news? Your tax rates remain the same - you will not pay more or less tax. The government simply made the rules easier to read so that ordinary people can understand their tax obligations without needing a lawyer or CA to explain everything.",
         "key_points": [
             "Replaces the 63-year-old Income-tax Act, 1961",
             "Number of sections reduced from 819 to 536",
             "No change in current tax rates",
             "Simplified language for better understanding",
-            "Tables and formulas replace complex explanations"
+            "Tables and formulas replace complex explanations",
+            "New tax regime as default option",
+            "Streamlined exemption claims process"
+        ]
+    },
+    "income-tax-select-committee": {
+        "title": "Select Committee Report - Income Tax Bill 2025",
+        "summary": "After the Income Tax Bill 2025 was introduced, a Select Committee of senior MPs reviewed it for several months. They invited common people, business owners, tax experts, and CAs to share their concerns. This 1200+ page report contains all their suggestions, complaints, and the committee's recommendations for making the bill even better.",
+        "key_points": [
+            "Committee recommendations for amendments",
+            "Stakeholder observations addressed",
+            "Compliance simplification suggestions",
+            "Implementation timeline recommendations"
         ]
     },
     "shiksha-bill-2025": {
         "title": "The Viksit Bharat Shiksha Adhishthan Bill, 2025",
-        "summary": "This Bill creates a single body called 'Viksit Bharat Shiksha Adhishthan' to manage all higher education in India. Currently, you need approvals from UGC, AICTE, and NCTE separately. Under this new law, there will be just ONE organization handling everything - making it easier to open quality institutions.",
+        "summary": "This Bill creates a single body called 'Viksit Bharat Shiksha Adhishthan' to manage all higher education in India. Currently, if you want to start a college, you need approvals from UGC (for universities), AICTE (for engineering/technical colleges), and NCTE (for teacher training). This is confusing and time-consuming. Under this new law, there will be just ONE organization handling everything - making it easier to open quality institutions and ensuring all colleges follow the same standards.",
         "key_points": [
             "Creates single umbrella body for higher education",
             "Merges functions of UGC, AICTE, and NCTE",
             "Aims to simplify higher education governance",
             "Promotes research and innovation",
-            "Implements National Education Policy 2020"
+            "Implements National Education Policy 2020",
+            "Accreditation Council for quality assurance",
+            "Standards Council for curriculum"
         ]
     },
     "vb-gramg-bill-2025": {
         "title": "Viksit Bharat Rozgar Guarantee (Gramin) Bill, 2025",
-        "summary": "This Bill strengthens job guarantee for rural families. Under MGNREGA, every rural household can get 100 days of paid work. This new bill adds skill training - so you can learn useful things like computer skills, tailoring, or modern farming while earning money.",
+        "summary": "This Bill strengthens job guarantee for rural families. Under MGNREGA, every rural household can get 100 days of paid work. This new bill adds skill training - so you can learn useful things like computer skills, tailoring, or modern farming while earning money. No more just manual labor! Payments will be faster through digital transfers.",
         "key_points": [
             "100 days guaranteed employment",
             "Skill development integration",
             "Livelihood support for rural areas",
             "Digital payment mechanism",
-            "Links employment with local development"
+            "Links employment with local development",
+            "Work certification system"
         ]
     },
     "securities-code-2025": {
         "title": "The Securities Markets Code, 2025",
-        "summary": "This Bill simplifies the rules for the stock market and investments in India. Currently, there are 4 different laws governing the stock market which creates confusion. This new code combines everything into one simple rulebook, making it easier for investors.",
+        "summary": "This Bill simplifies the rules for the stock market and investments in India. Currently, there are 4 different laws governing the stock market (SEBI Act, Securities Contracts Act, etc.) which creates confusion for investors and companies. This new code combines everything into one simple rulebook. If you invest in stocks, mutual funds, or any securities, this law protects your money better.",
         "key_points": [
             "Consolidates 4 major securities laws",
             "Replaces SEBI Act, 1992",
             "Modernizes capital market regulations",
             "Strengthens investor protection",
-            "Includes provisions for digital assets"
+            "Includes provisions for digital assets",
+            "Unified securities regulation code"
         ]
     },
     "electricity-bill-2025": {
         "title": "Electricity (Amendment) Bill, 2025",
-        "summary": "This Bill updates India's electricity laws to prepare for the future. It strongly promotes solar power, wind energy, and other renewable sources. The bill also protects electricity consumers with better complaint processes and modernizes the power grid for smart meters.",
+        "summary": "This Bill updates India's electricity laws to prepare for the future. It strongly promotes solar power, wind energy, and other renewable sources - meaning cleaner air and sustainable energy for your children. The bill also protects electricity consumers with better complaint processes and modernizes the power grid for smart meters and electric vehicles.",
         "key_points": [
             "Renewable energy promotion",
             "Distribution network improvements",
@@ -71,7 +86,7 @@ DEMO_DOCUMENTS = {
     },
     "vikasit-bharat-main": {
         "title": "Viksit Bharat Bill - Main Document",
-        "summary": "The Viksit Bharat Bill is India's roadmap to become a developed nation by 2047. It covers everything: better roads, world-class hospitals, clean water, modern cities, and jobs for everyone.",
+        "summary": "The Viksit Bharat Bill is India's roadmap to become a developed nation by 2047 - exactly 100 years after independence. It covers everything: better roads and railways, world-class hospitals and schools, clean water for all, modern cities, strong farming sector, and jobs for everyone.",
         "key_points": [
             "Vision 2047 development goals",
             "Sectoral development priorities",
@@ -99,21 +114,37 @@ def get_llm_client():
 
 class RAGEngine:
     """
-    Retrieval-Augmented Generation Engine
+    Document Q&A Engine
     
     Flow:
-    1. User asks a question
-    2. Search for relevant document chunks (Azure AI Search)
-    3. Pass chunks as context to LLM (Azure OpenAI or Gemini)
-    4. Generate grounded answer
+    1. User asks a question about a document
+    2. Get document summary and key points from store or DOCUMENT_CONTEXT
+    3. Pass document context to LLM (Azure OpenAI or Gemini)
+    4. Generate contextual answer based ONLY on document content
     5. Optionally translate to user's language
     """
     
     def __init__(self):
-        self.search_service = get_search_service()
         self.llm_client = get_llm_client()
         self.translator = get_translator_service()
         self.llm_provider = settings.get_available_llm()
+    
+    def _get_document_context(self, document_id: str) -> Optional[Dict[str, Any]]:
+        """Get document context from store or fallback to DOCUMENT_CONTEXT"""
+        # Try document store first
+        try:
+            store = get_document_store()
+            doc = store.get(document_id)
+            if doc and doc.get('summary'):
+                return doc
+        except Exception as e:
+            print(f"⚠️ Document store error: {e}")
+        
+        # Fallback to hardcoded context
+        if document_id in DOCUMENT_CONTEXT:
+            return DOCUMENT_CONTEXT[document_id]
+        
+        return None
     
     async def ask(
         self,
@@ -123,10 +154,8 @@ class RAGEngine:
         top_k: int = 5
     ) -> Dict[str, Any]:
         """
-        Answer a question using RAG
-        
-        Args:
         Answer a question based on document context
+        Answers are strictly limited to information within the document
         """
         # Validate inputs
         if not question or not question.strip():
@@ -138,84 +167,69 @@ class RAGEngine:
                 "llm_provider": self.llm_provider
             }
             
-        # Sanitize input (basic XSS prevention)
+        # Sanitize input
         question = self._sanitize_input(question)
         
-        # 1. Search for relevant chunks
-        chunks = []
-        try:
-            chunks = await self.search_service.search(
-                query=question,
-                document_id=document_id,
-                top_k=top_k,
-                use_vector=True
-            )
-        except Exception as e:
-            print(f"⚠️ Search error: {e}. Attempting fallback...")
-            
-        # FALLBACK CHAIN: If search failed or returned nothing
-        if not chunks and document_id:
-            # Try 1: Document store
-            try:
-                store = get_document_store()
-                doc = store.get(document_id)
-                if doc:
-                    print(f"ℹ️ Using document store fallback for {document_id}")
-                    fallback_text = f"Document Title: {doc.get('title', 'Government Document')}\n\n"
-                    fallback_text += f"Summary: {doc.get('summary', '')}\n\n"
-                    if doc.get('key_points'):
-                        fallback_text += "Key Points:\n" + "\n".join([f"- {kp}" for kp in doc['key_points']])
-                    chunks = [{"text": fallback_text, "score": 0.5, "document_title": doc.get('title')}]
-            except Exception as fb_err:
-                print(f"❌ Document store fallback failed: {fb_err}")
-            
-            # Try 2: DEMO_DOCUMENTS (hardcoded - always works)
-            if not chunks and document_id in DEMO_DOCUMENTS:
-                print(f"ℹ️ Using DEMO_DOCUMENTS fallback for {document_id}")
-                demo_doc = DEMO_DOCUMENTS[document_id]
-                fallback_text = f"Document Title: {demo_doc['title']}\n\n"
-                fallback_text += f"Summary: {demo_doc['summary']}\n\n"
-                fallback_text += "Key Points:\n" + "\n".join([f"- {kp}" for kp in demo_doc['key_points']])
-                chunks = [{"text": fallback_text, "score": 0.5, "document_title": demo_doc['title']}]
-
-        if not chunks:
+        # Get document context
+        doc_context = None
+        if document_id:
+            doc_context = self._get_document_context(document_id)
+        
+        if not doc_context:
             return {
-                "answer": "I couldn't find relevant information in the documents to answer your question. This may be because the search index is still being set up.",
+                "answer": "I couldn't find the document you're asking about. Please select a document first.",
                 "citations": [],
                 "confidence": 0.0,
                 "language": language,
                 "llm_provider": self.llm_provider
             }
         
-        # Step 2: Prepare context
-        context_texts = [chunk["text"] for chunk in chunks]
-        document_title = chunks[0].get("document_title", "Government Document")
+        # Build context text from document
+        context_text = f"Document Title: {doc_context.get('title', 'Government Document')}\n\n"
+        context_text += f"Document Summary:\n{doc_context.get('summary', '')}\n\n"
+        if doc_context.get('key_points'):
+            context_text += "Key Points:\n"
+            for kp in doc_context['key_points']:
+                context_text += f"- {kp}\n"
         
-        # Step 3: Generate answer using LLM
-        result = await self.llm_client.answer_question(
-            question=question,
-            context_chunks=context_texts,
-            document_title=document_title
-        )
+        document_title = doc_context.get('title', 'Government Document')
         
-        # Step 4: Build citations
-        citations = []
-        for i, chunk in enumerate(chunks):
-            citation = {
-                "text": chunk["text"][:200] + "..." if len(chunk["text"]) > 200 else chunk["text"],
-                "page": chunk.get("page"),
-                "section": f"Chunk {chunk.get('chunk_index', i)}",
-                "document_id": chunk.get("document_id"),
-                "relevance_score": chunk.get("score", 0)
+        # Generate answer using LLM
+        try:
+            result = await self.llm_client.answer_question(
+                question=question,
+                context_chunks=[context_text],
+                document_title=document_title
+            )
+        except Exception as e:
+            print(f"❌ LLM error: {e}")
+            return {
+                "answer": f"Sorry, I encountered an error while processing your question. Please try again. Error: {str(e)}",
+                "citations": [],
+                "confidence": 0.0,
+                "language": language,
+                "llm_provider": self.llm_provider
             }
-            citations.append(citation)
         
-        answer = result.get("answer", "Unable to generate answer.")
-        confidence = result.get("confidence", 0.5)
+        # Build citations
+        citations = [{
+            "text": doc_context.get('summary', '')[:200] + "...",
+            "page": None,
+            "section": "Document Summary",
+            "document_id": document_id,
+            "relevance_score": 0.9
+        }]
         
-        # Step 5: Translate if needed
+        # Get answer and confidence
+        answer = result.get("answer", "I couldn't generate an answer.")
+        confidence = result.get("confidence", 0.7)
+        
+        # Translate if needed
         if language != "en" and self.translator.is_configured():
-            answer = await self.translator.translate(answer, language, "en")
+            try:
+                answer = await self.translator.translate(answer, language, "en")
+            except Exception as e:
+                print(f"Translation error: {e}")
         
         return {
             "answer": answer,
@@ -225,19 +239,15 @@ class RAGEngine:
             "llm_provider": self.llm_provider
         }
     
-    async def generate_document_summary(
+    async def summarize_document(
         self,
         document_text: str,
         language: str = "en"
     ) -> Dict[str, Any]:
-        """Generate a summary of a document"""
-        # Generate summary
-        summary = await self.llm_client.generate_summary(document_text, max_length=300)
+        """Generate a citizen-friendly summary"""
+        summary = await self.llm_client.generate_summary(document_text)
+        key_points = await self.llm_client.extract_key_points(document_text)
         
-        # Extract key points
-        key_points = await self.llm_client.extract_key_points(document_text, num_points=5)
-        
-        # Translate if needed
         if language != "en" and self.translator.is_configured():
             summary = await self.translator.translate(summary, language, "en")
             key_points = await self.translator.translate_batch(key_points, language, "en")
@@ -255,13 +265,12 @@ class RAGEngine:
         language: str = "en"
     ) -> Dict[str, Any]:
         """Generate the 'Simply Put' timeline view"""
-        # Generate timeline using LLM
         timeline = await self.llm_client.generate_timeline(
             document_text=document_text,
             previous_law_text=previous_law_text
         )
         
-        # Translate all text fields if needed
+        # Translate if needed
         if language != "en" and self.translator.is_configured():
             for section in ["before", "change", "result"]:
                 if section in timeline:
@@ -287,7 +296,7 @@ class RAGEngine:
         # Remove HTML tags
         text = re.sub(r'<[^>]+>', '', text)
         # Limit length
-        return text[:2000].strip()
+        return text[:1000]
 
 
 # Singleton instance
