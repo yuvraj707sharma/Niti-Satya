@@ -143,7 +143,7 @@ Respond in JSON format:
         context_chunks: List[str],
         document_title: str = "Government Document"
     ) -> Dict[str, Any]:
-        """Answer question using RAG context"""
+        """Answer question using RAG context - with Gemini fallback"""
         context = "\n\n---\n\n".join(context_chunks[:5])
         
         prompt = f"""Based ONLY on the following excerpts from "{document_title}", answer the question.
@@ -157,19 +157,32 @@ Question: {question}
 
 Answer:"""
         
-        answer = await self._generate(prompt)
-        
-        return {
-            "answer": answer,
-            "confidence": 0.85 if "not available" not in answer.lower() else 0.3
-        }
+        # Try Azure OpenAI first
+        try:
+            answer = await self._generate(prompt)
+            return {
+                "answer": answer,
+                "confidence": 0.85 if "not available" not in answer.lower() else 0.3
+            }
+        except Exception as e:
+            print(f"⚠️ Azure OpenAI failed: {e}. Falling back to Gemini...")
+            # Fallback to Gemini
+            try:
+                from services.gemini_client import get_gemini_client
+                gemini = get_gemini_client()
+                return await gemini.answer_question(question, context_chunks, document_title)
+            except Exception as gemini_error:
+                return {
+                    "answer": f"Sorry, both Azure OpenAI and Gemini failed. Please check your API configuration. Error: {str(e)}",
+                    "confidence": 0.0
+                }
     
     async def fact_check(
         self,
         claim: str,
         relevant_chunks: List[Dict[str, str]]
     ) -> Dict[str, Any]:
-        """Verify a claim against document evidence"""
+        """Verify a claim against document evidence - with Gemini fallback"""
         evidence_text = "\n\n".join([
             f"From '{chunk.get('document_title', 'Document')}':\n{chunk.get('text', '')[:500]}"
             for chunk in relevant_chunks[:5]
@@ -196,17 +209,32 @@ Be very careful: only mark as "true" if clearly supported, "false" if contradict
 Mark "partially_true" if some aspects are correct but context is missing.
 Mark "unverifiable" if documents don't contain relevant information."""
         
-        result = await self._generate(prompt, max_tokens=1200)
-        
+        # Try Azure OpenAI first
         try:
-            return json.loads(result)
-        except:
-            return {
-                "verdict": "unverifiable",
-                "confidence": 0.3,
-                "explanation": result[:500],
-                "evidence": []
-            }
+            result = await self._generate(prompt, max_tokens=1200)
+            try:
+                return json.loads(result)
+            except:
+                return {
+                    "verdict": "unverifiable",
+                    "confidence": 0.3,
+                    "explanation": result[:500],
+                    "evidence": []
+                }
+        except Exception as e:
+            print(f"⚠️ Azure OpenAI failed for fact-check: {e}. Falling back to Gemini...")
+            # Fallback to Gemini
+            try:
+                from services.gemini_client import get_gemini_client
+                gemini = get_gemini_client()
+                return await gemini.fact_check(claim, relevant_chunks)
+            except Exception as gemini_error:
+                return {
+                    "verdict": "unverifiable",
+                    "confidence": 0.0,
+                    "explanation": f"Both Azure OpenAI and Gemini failed. Error: {str(e)}",
+                    "evidence": []
+                }
 
 
 # Singleton instance
